@@ -15,8 +15,8 @@ import java.util.List;
 public class Customer {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String uuid;
 
     @Column(nullable = false)
     private String fullName;
@@ -30,13 +30,19 @@ public class Customer {
     @Column(unique = true, nullable = false)
     private String phoneNumber;
 
+    @Column(nullable = false)
+    private Boolean isDeleted;
+
 //    Has-A
     @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
 
     @OneToOne
+    @JoinColumn(unique = true)
     private KYC kyc;
+
+    @ManyToOne
+    private CustomerSegment customerSegment;
 }
 
 
-//Spring Web, Validation, PostgreSQL driver, Spring Data JPA, Lumbok

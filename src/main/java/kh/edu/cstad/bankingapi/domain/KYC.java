@@ -21,6 +21,6 @@ public class KYC {
 
     private String nationalCardId;
 
-    @OneToOne
+    @OneToOne(mappedBy = "kyc")
     private Customer customer;
 }
