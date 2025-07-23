@@ -33,16 +33,17 @@ public class Customer {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-//    Has-A
+//    HAS-A
+    @ManyToOne
+    @JoinColumn(name="cus_segment_id")
+    private CustomerSegment customerSegment;
+
+    @OneToOne
+    private KYC kyc;
+
     @OneToMany(mappedBy = "customer")
     private List<Account> accounts;
 
-    @OneToOne
-    @JoinColumn(unique = true)
-    private KYC kyc;
-
-    @ManyToOne
-    private CustomerSegment customerSegment;
 }
 
 

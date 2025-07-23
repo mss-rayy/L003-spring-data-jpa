@@ -23,4 +23,5 @@ public class KYC {
 
     @OneToOne(mappedBy = "kyc")
     private Customer customer;
+
 }

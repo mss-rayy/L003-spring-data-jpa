@@ -26,6 +26,6 @@ public class CustomerSegment {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-    @OneToMany(mappedBy = "customerSegment", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "customerSegment")
     private List<Customer> customers;
 }

@@ -25,6 +25,7 @@ public class CustomerController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
     public CustomerResponse createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
+        System.out.println("TEST" + createCustomerRequest);
         return customerService.createCustomer(createCustomerRequest);
     }
 

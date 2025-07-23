@@ -3,6 +3,7 @@ package kh.edu.cstad.bankingapi.service.impl;
 import kh.edu.cstad.bankingapi.domain.Customer;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
+import kh.edu.cstad.bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +18,14 @@ import java.util.List;
 public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerMapper customerMapper;
 
     @Override
     public List<CustomerResponse> findAllCustomer() {
         List<Customer> customers = customerRepository.findAll();
 
         // logic find all
-        return customers.stream().map(customer -> CustomerResponse.builder()
-                .id(customer.getUuid())
-                .fullName(customer.getFullName())
-                .gender(customer.getGender())
-                .email(customer.getEmail())
-                .phoneNumber(customer.getPhoneNumber())
-                .build()).toList();
+        return customerMapper.toCustomerResponseList(customers);
     }
 
     @Override
@@ -43,22 +39,20 @@ public class CustomerServiceImpl implements CustomerService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Phone number already exists");
         }
 
-        Customer customer = new Customer();
-        customer.setFullName(createCustomerRequest.fullName());
-        customer.setGender(createCustomerRequest.gender());
-        customer.setEmail(createCustomerRequest.email());
-        customer.setPhoneNumber(createCustomerRequest.phoneNumber());
+        Customer customer = customerMapper.toCustomer(createCustomerRequest);
         customer.setIsDeleted(false);
 
         customerRepository.save(customer);
 
+        return customerMapper.toCustomerResponse(customer);
+
 //        logic create customer
-        return CustomerResponse.builder()
-                .id(customer.getUuid())
-                .fullName(customer.getFullName())
-                .gender(customer.getGender())
-                .email(customer.getEmail())
-                .phoneNumber(customer.getPhoneNumber())
-                .build();
+//        return CustomerResponse.builder()
+//                .uuid(customer.getUuid())
+//                .fullName(customer.getFullName())
+//                .gender(customer.getGender())
+//                .email(customer.getEmail())
+//                .phoneNumber(customer.getPhoneNumber())
+//                .build();
     }
 }

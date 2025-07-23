@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Setter
 @Getter
@@ -30,11 +31,12 @@ public class Account {
     @Column(nullable = false)
     private Boolean isDeleted;
 
-//    Has-A
-    @ManyToOne
-    private Customer customer;
-
     @ManyToOne
     private AccountType accountType;
 
+    @ManyToOne
+    private Customer customer;
+
+    @OneToMany(mappedBy = "receiver")
+    List<Transaction> transactions;
 }
