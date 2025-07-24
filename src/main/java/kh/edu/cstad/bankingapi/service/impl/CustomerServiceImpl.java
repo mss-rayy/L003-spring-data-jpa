@@ -1,6 +1,7 @@
 package kh.edu.cstad.bankingapi.service.impl;
 
 import kh.edu.cstad.bankingapi.domain.Customer;
+import kh.edu.cstad.bankingapi.domain.CustomerSegment;
 import kh.edu.cstad.bankingapi.domain.KYC;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
@@ -49,12 +50,14 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setIsDeleted(false);
 
 //        Validate customer segment
-        if(!customerSegmentRepository.existsBySegment(createCustomerRequest.customerSegment())){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Segment don't exists in our system");
-        }
+        CustomerSegment customerSegment = customerSegmentRepository
+                .findBySegment(createCustomerRequest.customerSegment())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer segment not found"));
+
+        //set customer segment
+        customer.setCustomerSegment(customerSegment);
 
         // validate KYC
-
         if(kycRepository.existsByNationalCardId(createCustomerRequest.nationalCardId())){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "National card already exists");
         }
@@ -63,9 +66,11 @@ public class CustomerServiceImpl implements CustomerService {
         KYC kyc = new KYC();
         kyc.setIsVerified(false);
         kyc.setIsDeleted(false);
-
-
+        kyc.setNationalCardId(createCustomerRequest.nationalCardId());
         kyc.setCustomer(customer);
+
+        //set kyc to customer
+        customer.setKyc(kyc);
         customerRepository.save(customer);
 
         return customerMapper.toCustomerResponse(customer);

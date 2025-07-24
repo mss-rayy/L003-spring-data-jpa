@@ -9,6 +9,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerSegmentRepository extends JpaRepository<CustomerSegment, Integer> {
 
-    boolean existsBySegment(String segment);
+    Optional<CustomerSegment> findBySegment(String segment);
 
 }

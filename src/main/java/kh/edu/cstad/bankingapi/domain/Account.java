@@ -26,6 +26,9 @@ public class Account {
     private String accountName;
 
     @Column(nullable = false)
+    private String currency;
+
+    @Column(nullable = false)
     private BigDecimal balance;
 
     @Column(nullable = false)
