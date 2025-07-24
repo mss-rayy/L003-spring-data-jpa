@@ -23,6 +23,7 @@ public interface CustomerMapper {
     List<CustomerResponse> toCustomerResponseList(List<Customer> customers);
 
 //    DTO -> Domain
+    @Mapping(source = "customerSegment", target = "customerSegment.segment")
     Customer toCustomer(CreateCustomerRequest request);
 
 }

@@ -25,6 +25,6 @@ public class AccountType {
     private Boolean isDeleted;
 
     @OneToMany(mappedBy = "accountType")
-    List<Account> accounts;
+    private List<Account> accounts;
 
 }

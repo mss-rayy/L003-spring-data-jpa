@@ -34,7 +34,7 @@ public class Customer {
     private Boolean isDeleted;
 
     //    HAS-A
-    @ManyToOne
+    @ManyToOne()
     @JoinColumn(name = "cus_segment_id")
     private CustomerSegment customerSegment;
 

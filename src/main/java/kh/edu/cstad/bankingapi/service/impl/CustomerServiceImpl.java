@@ -1,11 +1,14 @@
 package kh.edu.cstad.bankingapi.service.impl;
 
 import kh.edu.cstad.bankingapi.domain.Customer;
+import kh.edu.cstad.bankingapi.domain.KYC;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
 import kh.edu.cstad.bankingapi.dto.UpdateCustomerRequest;
 import kh.edu.cstad.bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.bankingapi.repository.CustomerRepository;
+import kh.edu.cstad.bankingapi.repository.CustomerSegmentRepository;
+import kh.edu.cstad.bankingapi.repository.KycRepository;
 import kh.edu.cstad.bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +23,8 @@ public class CustomerServiceImpl implements CustomerService {
 
     private final CustomerRepository customerRepository;
     private final CustomerMapper customerMapper;
+    private final CustomerSegmentRepository customerSegmentRepository;
+    private final KycRepository kycRepository;
 
     @Override
     public List<CustomerResponse> findAllCustomer() {
@@ -43,6 +48,24 @@ public class CustomerServiceImpl implements CustomerService {
         Customer customer = customerMapper.toCustomer(createCustomerRequest);
         customer.setIsDeleted(false);
 
+//        Validate customer segment
+        if(!customerSegmentRepository.existsBySegment(createCustomerRequest.customerSegment())){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Segment don't exists in our system");
+        }
+
+        // validate KYC
+
+        if(kycRepository.existsByNationalCardId(createCustomerRequest.nationalCardId())){
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "National card already exists");
+        }
+
+        // create kyc for customer
+        KYC kyc = new KYC();
+        kyc.setIsVerified(false);
+        kyc.setIsDeleted(false);
+
+
+        kyc.setCustomer(customer);
         customerRepository.save(customer);
 
         return customerMapper.toCustomerResponse(customer);
