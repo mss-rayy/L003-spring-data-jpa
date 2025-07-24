@@ -3,6 +3,7 @@ package kh.edu.cstad.bankingapi.service.impl;
 import kh.edu.cstad.bankingapi.domain.Customer;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
+import kh.edu.cstad.bankingapi.dto.UpdateCustomerRequest;
 import kh.edu.cstad.bankingapi.mapper.CustomerMapper;
 import kh.edu.cstad.bankingapi.repository.CustomerRepository;
 import kh.edu.cstad.bankingapi.service.CustomerService;
@@ -45,14 +46,32 @@ public class CustomerServiceImpl implements CustomerService {
         customerRepository.save(customer);
 
         return customerMapper.toCustomerResponse(customer);
+    }
 
-//        logic create customer
-//        return CustomerResponse.builder()
-//                .uuid(customer.getUuid())
-//                .fullName(customer.getFullName())
-//                .gender(customer.getGender())
-//                .email(customer.getEmail())
-//                .phoneNumber(customer.getPhoneNumber())
-//                .build();
+    @Override
+    public CustomerResponse updateCustomerByEmail(String email, UpdateCustomerRequest updateCustomerRequest) {
+
+        Customer customer = customerRepository.findByEmail(email)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Customer not found!!"));
+
+        customerMapper.toCustomerPartial(updateCustomerRequest, customer);
+
+        customerRepository.save(customer);
+
+        return customerMapper.toCustomerResponse(customer);
+    }
+
+    @Override
+    public void deleteCustomerByUuid(String uuid) {
+
+        Customer customer = customerRepository.findCustomerByUuid(uuid)
+                .orElseThrow(()-> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Customer not found!!"
+                        ));
+
+        customerRepository.delete(customer);
     }
 }
+
+// TCL - Transaction Controll Language

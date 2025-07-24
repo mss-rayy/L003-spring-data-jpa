@@ -1,8 +1,10 @@
 package kh.edu.cstad.bankingapi.controller;
 
+import jakarta.validation.Valid;
 import kh.edu.cstad.bankingapi.domain.Customer;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
+import kh.edu.cstad.bankingapi.dto.UpdateCustomerRequest;
 import kh.edu.cstad.bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -24,10 +26,22 @@ public class CustomerController {
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping()
-    public CustomerResponse createCustomer(@RequestBody CreateCustomerRequest createCustomerRequest) {
+    public CustomerResponse createCustomer(@Valid @RequestBody CreateCustomerRequest createCustomerRequest) {
         System.out.println("TEST" + createCustomerRequest);
         return customerService.createCustomer(createCustomerRequest);
     }
 
+    @PatchMapping("/{email}")
+    public CustomerResponse updateCustomer(
+            @PathVariable String email,
+            @RequestBody UpdateCustomerRequest updateCustomerRequest
+    ){
+        return customerService.updateCustomerByEmail(email,updateCustomerRequest);
+    }
 
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @DeleteMapping("/{uuid}")
+    public void deleteCustomerByUuid(@PathVariable String uuid) {
+        customerService.deleteCustomerByUuid(uuid);
+    }
 }

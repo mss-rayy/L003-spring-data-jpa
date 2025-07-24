@@ -3,6 +3,7 @@ package kh.edu.cstad.bankingapi.service;
 
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
 import kh.edu.cstad.bankingapi.dto.CustomerResponse;
+import kh.edu.cstad.bankingapi.dto.UpdateCustomerRequest;
 
 import java.util.List;
 
@@ -22,6 +23,14 @@ public interface CustomerService {
      */
     CustomerResponse createCustomer(CreateCustomerRequest createCustomerRequest);
 
+    /**
+     * Update partially of field Full name and gender
+     * @param email
+     * @param updateCustomerRequest
+     * @return CustomerResponse
+     */
+    CustomerResponse updateCustomerByEmail(String email, UpdateCustomerRequest updateCustomerRequest);
 
+    void deleteCustomerByUuid(String uuid);
 
 }
