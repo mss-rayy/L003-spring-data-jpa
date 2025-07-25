@@ -1,4 +1,11 @@
 package kh.edu.cstad.bankingapi.dto;
 
-public record AccountResponse() {
+import java.math.BigDecimal;
+
+public record AccountResponse(
+        String accountNumber,
+        String accountName,
+        String currency,
+        BigDecimal balance
+) {
 }

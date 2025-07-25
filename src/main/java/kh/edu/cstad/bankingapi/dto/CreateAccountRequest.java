@@ -1,11 +1,14 @@
 package kh.edu.cstad.bankingapi.dto;
 
+import java.math.BigDecimal;
+
 public record CreateAccountRequest(
 
         String accountNumber,
         String accountName,
-        String balance,
+        BigDecimal balance,
         String currency,
-        String accountType
+        String accountType,
+        String phoneNumber
 ) {
 }
