@@ -1,5 +1,6 @@
 package kh.edu.cstad.bankingapi.controller;
 
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import kh.edu.cstad.bankingapi.domain.Customer;
 import kh.edu.cstad.bankingapi.dto.CreateCustomerRequest;
