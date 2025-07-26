@@ -14,6 +14,7 @@ import kh.edu.cstad.bankingapi.service.CustomerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -29,7 +30,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerResponse> findAllCustomer() {
-        List<Customer> customers = customerRepository.findAll();
+        List<Customer> customers = customerRepository.findAllByIsDeletedFalse();
 
         // logic find all
         return customerMapper.toCustomerResponseList(customers);
@@ -100,6 +101,17 @@ public class CustomerServiceImpl implements CustomerService {
 
         customerRepository.delete(customer);
     }
-}
 
-// TCL - Transaction Controll Language
+    // Use Transactional to manage all transaction by developer cuz we use JPQL not JPA
+    // In database transaction can be save, update, delete
+    @Transactional
+    @Override
+    public void disableByPhoneNumber(String phoneNumber) {
+
+        if (!customerRepository.isExistByPhoneNumber(phoneNumber)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer phone number not found");
+        }
+
+        customerRepository.disableByPhoneNumber(phoneNumber);
+    }
+}

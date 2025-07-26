@@ -13,7 +13,19 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepository extends JpaRepository<Customer, String> {
 
-    //    find all
+    List<Customer> findAllByIsDeletedFalse();
+
+    @Modifying
+    @Query("""
+            UPDATE Customer c SET c.isDeleted = TRUE WHERE c.phoneNumber = :phoneNumber
+            """)
+    void disableByPhoneNumber(String phoneNumber);
+
+    @Query(""" 
+            SELECT count (c) > 0 from Customer c where c.phoneNumber = :phoneNumber
+            """)
+   boolean isExistByPhoneNumber(String phoneNumber);
+
     List<Customer> findAll();
 
     Boolean existsByEmail(String email);
@@ -25,4 +37,5 @@ public interface CustomerRepository extends JpaRepository<Customer, String> {
     Optional<Customer> findByEmail(String email);
 
     Optional<Customer> findCustomerByUuid(String uuid);
+
 }

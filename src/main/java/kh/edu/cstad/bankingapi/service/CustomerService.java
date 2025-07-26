@@ -33,4 +33,6 @@ public interface CustomerService {
 
     void deleteCustomerByUuid(String uuid);
 
+    void disableByPhoneNumber(String phoneNumber);
+
 }
